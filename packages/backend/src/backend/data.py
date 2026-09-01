@@ -14,7 +14,8 @@ def parse_coord(coord: str) -> float:
 @lru_cache(maxsize=1)
 def load_solar() -> pd.DataFrame:
     df = pd.read_csv("data/archive-4/solar.csv")
-    df["Year"] = df["Calendar Date"].apply(parse_year) 
+    df["Year"] = df["Calendar Date"].apply(parse_year)
+    df["Century"] = (df["Year"] // 100) * 100
     df["Latitude (deg)"] = df["Latitude"].apply(parse_coord)
     df["Longitude (deg)"] = df["Longitude"].apply(parse_coord)
     df["Path Width (km)"] = df["Path Width (km)"].replace("-", pd.NA)
