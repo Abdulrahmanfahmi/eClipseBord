@@ -72,6 +72,7 @@ if not listing_df.empty:
         "Path Width (km)": "Path width (km)",
         "Central Duration": "Central duration",
     })
+    display_df["Path width (km)"] = display_df["Path width (km)"].astype(str)
     st.dataframe(display_df, use_container_width=True, hide_index=True)
 else:
     st.info("Inga förmörkelser i det valda intervallet.")
