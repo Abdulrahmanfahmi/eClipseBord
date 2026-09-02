@@ -1,10 +1,12 @@
+import os
+
 import pandas as pd
 import requests
 import streamlit as st
 
-BACKEND_URL = "http://localhost:8000"
+BACKEND_URL = os.environ.get("BACKEND_URL", "http://localhost:8000")
 
-st.set_page_config(page_title="eClipseBord", page_icon="🌑", layout="wide")
+st.set_page_config(page_title="eClipseBord", page_icon="", layout="wide")
 
 st.title("eClipseBord")
 st.caption("Solar eclipse dashboard — NASA Five Millennium Canon (-1999 till 3000)")
@@ -35,17 +37,18 @@ stats = requests.get(
 
 st.subheader(f"Förmörkelser {year_min}–{year_max}")
 st.metric("Antal förmörkelser i valt intervall", stats["total"])
+with st.container(border=True):
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**Typfördelning**")
+        type_df = pd.DataFrame(stats["by_type"]).set_index("type")
+        st.bar_chart(type_df, color="#F2A65A")
 
-col1, col2 = st.columns(2)
-with col1:
-    st.markdown("**Typfördelning**")
-    type_df = pd.DataFrame(stats["by_type"]).set_index("type")
-    st.bar_chart(type_df)
+    with col2:
+        st.markdown("**Per århundrade**")
+        century_df = pd.DataFrame(stats["by_century"]).set_index("century")
+        st.line_chart(century_df, color="#F2A65A")
 
-with col2:
-    st.markdown("**Per århundrade**")
-    century_df = pd.DataFrame(stats["by_century"]).set_index("century")
-    st.line_chart(century_df)
 
 st.divider()
 st.markdown(f"**Lista över förmörkelser ({year_min}–{year_max})**")
