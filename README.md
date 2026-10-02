@@ -1,42 +1,38 @@
-# eClipseBord
+eClipseBord
 En dashboard över NASA:s "Five Millennium Canon of Solar/Lunar Eclipses" (Fred Espenak), byggd för labben eClipseBord — FastlyDep.
-Byggd med FastAPI + Streamlit + Docker + Azure, med extra fokus på den totala solförmörkelsen 12 augusti 2026.
-
- Live demo
-Dashboard: https://eclipsebord-frontend.whiteriver-57fab774.swedencentral.azurecontainerapps.io
-Backend API (Swagger-dokumentation): https://eclipsebord-backend.whiteriver-57fab774.swedencentral.azurecontainerapps.io/docs
+Byggd med FastAPI, Streamlit, Docker och Azure, med extra fokus på den totala solförmörkelsen 12 augusti 2026.
+Live demo
+Länk
+Dashboard	https://eclipsebord-frontend.whiteriver-57fab774.swedencentral.azurecontainerapps.io
+Backend API (Swagger-dokumentation)	https://eclipsebord-backend.whiteriver-57fab774.swedencentral.azurecontainerapps.io/docs
 Observera: Container Apps kan vara stoppade för att spara Azure-krediter. Kontakta mig om de behöver startas om.
-
 Om projektet
 Dashboarden visar data om sol- och månförmörkelser från år -1999 till 3000. Man kan filtrera på årsintervall, se fördelning av förmörkelsetyper, trend över tid, och en lista över enskilda förmörkelser.
-
 Arkitektur
 Lokalt (uv workspace)
-├── packages/backend   → FastAPI, serverar eclipse-data via REST-API
-└── packages/frontend  → Streamlit, hämtar data från backend via HTTP
-
+packages/backend — FastAPI, serverar eclipse-data via REST-API
+packages/frontend — Streamlit, hämtar data från backend via HTTP
 Docker
-├── backend-container   (port 8000)
-└── frontend-container  (port 8501, pratar med backend via docker-compose-nätverk)
-
+backend-container (port 8000)
+frontend-container (port 8501, pratar med backend via docker-compose-nätverk)
 Azure
-├── Container Registry   → lagrar Docker-images
-└── Container Apps       → kör backend + frontend, kopplade via miljövariabeln BACKEND_URL
+Container Registry — lagrar Docker-images
+Container Apps — kör backend och frontend, kopplade via miljövariabeln BACKEND_URL
 Projektstruktur
 eClipseBord/
-├── data/                       # NASA eclipse-dataset (solar.csv, lunar.csv)
-├── EDA/                        # Kort exploration av datat
+├── data/                        NASA eclipse-dataset (solar.csv, lunar.csv)
+├── EDA/                         Kort exploration av datat
 ├── packages/
-│   ├── backend/                # FastAPI-tjänst
+│   ├── backend/                 FastAPI-tjänst
 │   │   ├── src/backend/
-│   │   │   ├── data.py         # Laddar och rensar CSV-data
-│   │   │   └── main.py         # API-endpoints
+│   │   │   ├── data.py          Laddar och rensar CSV-data
+│   │   │   └── main.py          API-endpoints
 │   │   └── Dockerfile
-│   └── frontend/                # Streamlit-dashboard
+│   └── frontend/                Streamlit-dashboard
 │       ├── src/frontend/app.py
 │       └── Dockerfile
 ├── docker-compose.yml
-├── pyproject.toml               # uv workspace-rot
+├── pyproject.toml               uv workspace-rot
 └── uv.lock
 Köra lokalt
 Kräver uv.
@@ -58,7 +54,7 @@ Deployat manuellt via Azure Portal:
 Skapade en Azure Container Registry
 Byggde Docker-images för linux/amd64 och pushade dem till registret
 Skapade en Container Apps-miljö
-Skapade två Container Apps (backend + frontend), kopplade via miljövariabeln BACKEND_URL
+Skapade två Container Apps (backend och frontend), kopplade via miljövariabeln BACKEND_URL
 API-endpoints (backend)
 Endpoint	Beskrivning
 GET /health	Hälsokontroll
@@ -67,7 +63,6 @@ GET /eclipses/solar/featured	Den totala solförmörkelsen 12 augusti 2026
 GET /eclipses/solar/stats	Statistik: antal per typ och per århundrade
 GET /eclipses/lunar	Lista månförmörkelser (bonus)
 Designprincip: DRY
-All logik för att ladda och städa eclipse-datat (t.ex. omvandla koordinater som "65.2N" till decimaltal, och parsa år ur datumsträngar) ligger på ett enda ställe i backend/data.py. Flera API-endpoints återanvänder samma funktioner istället för att koden dupliceras.
-
+All logik för att ladda och städa eclipse-datat (till exempel omvandla koordinater som "65.2N" till decimaltal, och parsa år ur datumsträngar) ligger på ett enda ställe i backend/data.py. Flera API-endpoints återanvänder samma funktioner istället för att koden dupliceras.
 LLM usage
 Jag använde en AI-assistent (Claude) som hjälp i delar av projektet.
