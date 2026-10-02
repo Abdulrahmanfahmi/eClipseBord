@@ -121,8 +121,4 @@ Deployat manuellt via Azure Portal:
 
 All logik för att ladda och städa eclipse-datat (till exempel omvandla koordinater som `"65.2N"` till decimaltal, och parsa år ur datumsträngar) ligger på ett enda ställe i `backend/data.py`. Flera API-endpoints återanvänder samma funktioner istället för att koden dupliceras.
 
----
 
-## LLM usage
-
-Jag använde en AI-assistent (Claude) som hjälp i delar av projektet.
